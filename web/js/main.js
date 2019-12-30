@@ -1,5 +1,5 @@
 ;(function () {
-	
+
 	'use strict';
 
 	var isMobile = {
@@ -33,10 +33,10 @@
 
     			$('body').removeClass('offcanvas');
     			$('.js-fh5co-nav-toggle').removeClass('active');
-				
+
 	    	}
-	    
-	    	
+
+
 	    }
 		});
 
@@ -64,14 +64,14 @@
 			$this
 				.addClass('active')
 				.find('ul')
-				.slideDown(500, 'easeOutExpo');				
+				.slideDown(500, 'easeOutExpo');
 		}).mouseleave(function(){
 
 			var $this = $(this);
 			$this
 				.removeClass('active')
 				.find('ul')
-				.slideUp(500, 'easeOutExpo');				
+				.slideUp(500, 'easeOutExpo');
 		});
 
 
@@ -81,7 +81,7 @@
 
     			$('body').removeClass('offcanvas');
     			$('.js-fh5co-nav-toggle').removeClass('active');
-				
+
 	    	}
 		});
 	};
@@ -103,14 +103,14 @@
 
 		});
 	};
-	
+
 
 	var contentWayPoint = function() {
 		var i = 0;
 		$('.animate-box').waypoint( function( direction ) {
 
 			if( direction === 'down' && !$(this.element).hasClass('animated-fast') ) {
-				
+
 				i++;
 
 				$(this.element).addClass('item-animate');
@@ -133,9 +133,9 @@
 							el.removeClass('item-animate');
 						},  k * 200, 'easeInOutExpo' );
 					});
-					
+
 				}, 100);
-				
+
 			}
 
 		} , { offset: '85%' } );
@@ -167,13 +167,13 @@
 	var goToTop = function() {
 
 		$('.js-gotop').on('click', function(event){
-			
+
 			event.preventDefault();
 
 			$('html, body').animate({
 				scrollTop: $('html').offset().top
 			}, 500, 'easeInOutExpo');
-			
+
 			return false;
 		});
 
@@ -187,7 +187,7 @@
 			}
 
 		});
-	
+
 	};
 
 
@@ -208,9 +208,9 @@
 	var counterWayPoint = function() {
 		if ($('#fh5co-counter').length > 0 ) {
 			$('#fh5co-counter').waypoint( function( direction ) {
-										
+
 				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-					setTimeout( counter , 400);					
+					setTimeout( counter , 400);
 					$(this.element).addClass('animated');
 				}
 			} , { offset: '90%' } );
@@ -218,7 +218,7 @@
 	};
 
 	var sliderMain = function() {
-		
+
 	  	$('#fh5co-hero .flexslider').flexslider({
 			animation: "fade",
 			slideshowSpeed: 5000,
@@ -240,9 +240,48 @@
 
 	};
 
+	function initData() {
+		$.ajax({
+			url: "http://www.liruigao.top/cactus_blog/json/summary.json",
+			async: false,
+			dataType: "json",
+			success:function (data) {
+				loadBlogData(data.blogs);
+			},
+			error: function (err) {
+				console.log("get summary json fail, check cactus_blog themes!", err);
+			}
+		})
+	}
+
+	function loadBlogData(blogs) {
+		var blog_url = "http://www.liruigao.top/cactus_blog/";
+		var blog_html = '';
+		for (var i = 0; i < blogs.length; i++) {
+			var blog_path = blog_url + blogs[i].path;
+			blog_html += '<div class="col-md-4">'
+							+ '<div class="fh5co-blog animate-box">'
+								+ '<a href="' + blog_path + '" class="blog-bg" style="background-image: url(' + blogs[i].image + ');"></a>'
+								+ '<div class="blog-text">'
+									+ '<span class="posted_on">' + blogs[i].date + '</span>'
+									+ '<h3><a href="' + blog_path + '">'+ blogs[i].title +'</a></h3>'
+									+ '<p>' + blogs[i].content + '</p>'
+									+ '<ul class="stuff">'
+										+ '<li><i class="icon-heart3"></i>249</li>'
+										+ '<li><i class="icon-eye2"></i>1,308</li>'
+										+ '<li><a href="' + blog_path + '">Read More<i class="icon-arrow-right22"></i></a></li>'
+									+ '</ul>'
+								+ '</div>'
+							+ '</div>'
+						+ '</div>';
+		}
+		document.getElementById("cactus-blogs").innerHTML = blog_html;
+	}
+
 
 
 	$(function(){
+		initData();
 		mobileMenuOutsideClick();
 		offcanvasMenu();
 		burgerMenu();
